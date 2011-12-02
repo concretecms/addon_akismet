@@ -3,7 +3,7 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
 $form = Loader::helper('form');
-$pkg = Package::getByHandle('recaptcha');
+$pkg = Package::getByHandle('akismet');
 ?>
 
 <div class="clearfix">
