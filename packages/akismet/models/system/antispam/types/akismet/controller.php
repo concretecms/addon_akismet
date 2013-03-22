@@ -7,6 +7,20 @@ class AkismetSystemAntispamTypeController extends Object {
 		$pkg->saveConfig('ANTISPAM_AKISMET_API_KEY', $args['ANTISPAM_AKISMET_API_KEY']);
 	}
 
+	public function report($args) {
+		Loader::library('3rdparty/microakismet/library', 'akismet');
+		$pkg = Package::getByHandle('akismet');
+		$akismet = new MicroAkismet($pkg->config('ANTISPAM_AKISMET_API_KEY'), BASE_URL . DIR_REL, t('concrete5 Akismet Plugin') );
+		$v = array();
+		$v['user_ip'] = $args['ip_address'];
+		$v['user_agent'] = $args['user_agent'];
+		$v['comment_type'] = $args['type'];
+		$v['comment_author'] = $args['author'];
+		$v['comment_author_email'] = $args['author_email'];
+		$v['comment_content'] = $args['content'];
+		$akismet->spam($v);
+	}
+
 	public function check($args) {
 		$pkg = Package::getByHandle('akismet');
 		Loader::library('3rdparty/microakismet/library', 'akismet');
