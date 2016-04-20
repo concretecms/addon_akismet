@@ -25,17 +25,20 @@ class AkismetSystemAntispamTypeController extends Object {
 		$pkg = Package::getByHandle('akismet');
 		Loader::library('3rdparty/microakismet/library', 'akismet');
 		$c = Page::getCurrentPage();
+		$site = BASE_URL . DIR_REL;
 		if (is_object($c)) { 
-			$link = Loader::helper('navigation')->getLinkToCollection($c, true);
+			$permalink = Loader::helper('navigation')->getLinkToCollection($c, true);
 		} else { 
-			$link = BASE_URL . DIR_REL;
+			$permalink = $site;
 		}
+
 		$v = array();
+		$v['permalink'] = $permalink;
 		$v['user_ip'] = $args['ip_address'];
 		$v['user_agent'] = $args['user_agent'];
 		$v['comment_content'] = $args['content'];
 
-		$akismet = new MicroAkismet($pkg->config('ANTISPAM_AKISMET_API_KEY'), $link, t('concrete5 Akismet Plugin') );
+		$akismet = new MicroAkismet($pkg->config('ANTISPAM_AKISMET_API_KEY'), $site, t('concrete5 Akismet Plugin') );
 		$r = $akismet->check( $v );
 		if (!$r) {
 			return true; // it passes the test
